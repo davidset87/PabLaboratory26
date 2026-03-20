@@ -1,0 +1,141 @@
+﻿using AppCore.Dto;
+using AppCore.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace WebAPI.Controllers;
+
+[ApiController]
+[Route("api/contacts")]
+public class ContactsController : ControllerBase
+{
+    private readonly IPersonService _personService;
+
+    public ContactsController(IPersonService personService)
+    {
+        _personService = personService;
+    }
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok("Contacts API is working");
+    }
+
+    [HttpGet("persons")]
+    public async Task<IActionResult> GetAllPersons([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    {
+        try
+        {
+            var result = await _personService.FindAllPeoplePagedAsync(page, pageSize);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpGet("persons/{id:guid}")]
+    public async Task<IActionResult> GetPersonById(Guid id)
+    {
+        try
+        {
+            var person = await _personService.FindPersonByIdAsync(id);
+            if (person == null)
+                return NotFound(new { message = $"Person with id {id} not found" });
+            
+            return Ok(person);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpGet("persons/search")]
+    public async Task<IActionResult> SearchPersons([FromQuery] string query)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return BadRequest(new { error = "Query parameter is required" });
+
+            var results = await _personService.SearchPeopleAsync(query);
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpGet("companies/{companyId}/employees")]
+    public async Task<IActionResult> GetEmployeesByCompany(Guid companyId)
+    {
+        try
+        {
+            var employees = await _personService.FindPeopleFromCompanyAsync(companyId);
+            return Ok(employees);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreatePerson([FromBody] CreatePersonDto createDto)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var created = await _personService.CreatePersonAsync(createDto);
+            return CreatedAtAction(nameof(GetPersonById), new { id = created.Id }, created);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdatePerson(Guid id, [FromBody] UpdatePersonDto updateDto)
+    {
+        try
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var updated = await _personService.UpdatePersonAsync(id, updateDto);
+            return Ok(updated);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(new { message = $"Person with id {id} not found" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeletePerson(Guid id)
+    {
+        try
+        {
+            await _personService.DeletePersonAsync(id);
+            return NoContent();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound(new { message = $"Person with id {id} not found" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+}

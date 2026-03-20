@@ -1,0 +1,12 @@
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\bin\Debug\net9.0\AppCore.deps.json
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\bin\Debug\net9.0\AppCore.dll
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\bin\Debug\net9.0\AppCore.pdb
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\AppCore.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\AppCore.AssemblyInfoInputs.cache
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\AppCore.AssemblyInfo.cs
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\AppCore.csproj.CoreCompileInputs.cache
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\AppCore.dll
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\refint\AppCore.dll
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\AppCore.pdb
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\ref\AppCore.dll
+C:\Users\david\RiderProjects\PabLaboratoey26\AppCore\obj\Debug\net9.0\AppCore.csproj.AssemblyReference.cache
