@@ -450,11 +450,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\Infrastructure\\Infrastructure.csproj",
+      "projectUniqueName": "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\Infrastructure\\Infrastructure.csproj",
       "projectName": "Infrastructure",
-      "projectPath": "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\Infrastructure\\Infrastructure.csproj",
+      "projectPath": "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\Infrastructure\\Infrastructure.csproj",
       "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\Infrastructure\\obj\\",
+      "outputPath": "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -476,8 +476,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\AppCore\\AppCore.csproj": {
-              "projectPath": "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\AppCore\\AppCore.csproj"
+            "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\AppCore\\AppCore.csproj": {
+              "projectPath": "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\AppCore\\AppCore.csproj"
             }
           }
         }

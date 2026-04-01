@@ -6,14 +6,15 @@ namespace AppCore.Interfaces;
 public interface IPersonService
 {
     Task<PagedResult<PersonDto>> FindAllPeoplePagedAsync(int page, int pageSize);
-    Task<IEnumerable<PersonDto>> FindPeopleFromCompanyAsync(Guid companyId);
     Task<PersonDto?> FindPersonByIdAsync(Guid id);
+    Task<IEnumerable<PersonDto>> FindPeopleFromCompanyAsync(Guid companyId);
+    Task<IEnumerable<PersonDto>> FindPeopleFromOrganizationAsync(Guid organizationId);
+    Task<IEnumerable<PersonDto>> SearchPeopleAsync(string query);
     Task<PersonDto> CreatePersonAsync(CreatePersonDto createDto);
     Task<PersonDto> UpdatePersonAsync(Guid id, UpdatePersonDto updateDto);
     Task DeletePersonAsync(Guid id);
-    Task<IEnumerable<PersonDto>> SearchPeopleAsync(string query);
-    Task AddNoteToPersonAsync(Guid personId, string content);
-    Task<IEnumerable<Note>> GetPersonNotesAsync(Guid personId);
-    Task AddTagToPersonAsync(Guid personId, string tagName);
-    Task RemoveTagFromPersonAsync(Guid personId, string tagName);
+    
+    Task<Note> AddNoteToPersonAsync(Guid personId, CreateNoteDto noteDto);
+    Task<PersonDto> GetPersonAsync(Guid personId);
+    Task DeleteNoteAsync(Guid personId, Guid noteId);
 }

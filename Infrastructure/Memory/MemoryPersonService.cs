@@ -1,4 +1,5 @@
 ﻿using AppCore.Dto;
+using AppCore.Exceptions;
 using AppCore.Interfaces;
 using AppCore.Models;
 using AppCore.Repositories;
@@ -92,60 +93,53 @@ public class MemoryPersonService : IPersonService
         await _unitOfWork.SaveChangesAsync();
     }
 
-    public async Task AddNoteToPersonAsync(Guid personId, string content)
+    public async Task<PersonDto> GetPersonAsync(Guid personId)
     {
         var person = await _unitOfWork.Persons.FindByIdAsync(personId);
         if (person == null)
-            throw new KeyNotFoundException($"Person with id {personId} not found");
+            throw new ContactNotFoundException($"Person with id {personId} not found!");
+        
+        return _mapper.Map<PersonDto>(person);
+    }
+
+    public async Task<Note> AddNoteToPersonAsync(Guid personId, CreateNoteDto noteDto)
+    {
+        var person = await _unitOfWork.Persons.FindByIdAsync(personId);
+        if (person == null)
+            throw new ContactNotFoundException($"Person with id {personId} not found!");
+
+        if (person.Notes == null)
+            person.Notes = new List<Note>();
 
         var note = new Note
         {
             Id = Guid.NewGuid(),
-            Content = content,
+            Content = noteDto.Content,
             ContactId = personId,
             CreatedAt = DateTime.UtcNow
         };
 
         person.Notes.Add(note);
+        
+        await _unitOfWork.Persons.UpdateAsync(person);
         await _unitOfWork.SaveChangesAsync();
+
+        return note;
     }
 
-    public async Task<IEnumerable<Note>> GetPersonNotesAsync(Guid personId)
+    public async Task DeleteNoteAsync(Guid personId, Guid noteId)
     {
         var person = await _unitOfWork.Persons.FindByIdAsync(personId);
         if (person == null)
-            throw new KeyNotFoundException($"Person with id {personId} not found");
+            throw new ContactNotFoundException($"Person with id {personId} not found!");
 
-        return person.Notes;
-    }
+        var note = person.Notes?.FirstOrDefault(n => n.Id == noteId);
+        if (note == null)
+            throw new Exception($"Note with id {noteId} not found for person {personId}");
 
-    public async Task AddTagToPersonAsync(Guid personId, string tagName)
-    {
-        var person = await _unitOfWork.Persons.FindByIdAsync(personId);
-        if (person == null)
-            throw new KeyNotFoundException($"Person with id {personId} not found");
-
-        var tag = new Tag
-        {
-            Id = Guid.NewGuid(),
-            Name = tagName
-        };
-
-        person.Tags.Add(tag);
+        person.Notes.Remove(note);
+        
+        await _unitOfWork.Persons.UpdateAsync(person);
         await _unitOfWork.SaveChangesAsync();
-    }
-
-    public async Task RemoveTagFromPersonAsync(Guid personId, string tagName)
-    {
-        var person = await _unitOfWork.Persons.FindByIdAsync(personId);
-        if (person == null)
-            throw new KeyNotFoundException($"Person with id {personId} not found");
-
-        var tag = person.Tags.FirstOrDefault(t => t.Name == tagName);
-        if (tag != null)
-        {
-            person.Tags.Remove(tag);
-            await _unitOfWork.SaveChangesAsync();
-        }
     }
 }

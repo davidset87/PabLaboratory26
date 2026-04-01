@@ -2,6 +2,7 @@ using AppCore.Interfaces;
 using AppCore.Modules;
 using AppCore.Repositories;
 using Infrastructure.Memory;
+using WebAPI.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Register exception handling
+builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // Register repositories
 builder.Services.AddSingleton<IPersonRepository, MemoryPersonRepository>();
@@ -23,7 +28,7 @@ builder.Services.AddSingleton<IContactUnitOfWork, MemoryContactUnitOfWork>();
 // Register Services
 builder.Services.AddSingleton<IPersonService, MemoryPersonService>();
 
-// Dodajemy moduł Contacts z walidatorami i AutoMapper
+// Add Contacts module with validators and AutoMapper
 builder.Services.AddContactsModule(builder.Configuration);
 
 var app = builder.Build();
@@ -36,6 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseExceptionHandler(); // This must be before MapControllers
 app.UseAuthorization();
 app.MapControllers();
 

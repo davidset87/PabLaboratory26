@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\AppCore\\AppCore.csproj": {}
+    "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\AppCore\\AppCore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\AppCore\\AppCore.csproj": {
+    "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\AppCore\\AppCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\AppCore\\AppCore.csproj",
+        "projectUniqueName": "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\AppCore\\AppCore.csproj",
         "projectName": "AppCore",
-        "projectPath": "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\AppCore\\AppCore.csproj",
+        "projectPath": "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\AppCore\\AppCore.csproj",
         "packagesPath": "C:\\Users\\david\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\david\\RiderProjects\\PabLaboratoey26\\AppCore\\obj\\",
+        "outputPath": "C:\\Users\\david\\RiderProjects\\PabLaboratory026\\AppCore\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

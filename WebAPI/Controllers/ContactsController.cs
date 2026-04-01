@@ -1,4 +1,5 @@
 ﻿using AppCore.Dto;
+using AppCore.Exceptions;
 using AppCore.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -132,6 +133,86 @@ public class ContactsController : ControllerBase
         catch (KeyNotFoundException)
         {
             return NotFound(new { message = $"Person with id {id} not found" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpPost("{contactId:guid}/notes")]
+    [ProducesResponseType(typeof(NoteDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> AddNote(
+        [FromRoute] Guid contactId,
+        [FromBody] CreateNoteDto dto)
+    {
+        try
+        {
+            var note = await _personService.AddNoteToPersonAsync(contactId, dto);
+            
+            var noteDto = new NoteDto
+            {
+                Id = note.Id,
+                Content = note.Content,
+                CreatedAt = note.CreatedAt,
+                ContactId = note.ContactId
+            };
+            
+            return CreatedAtAction(nameof(GetNotes), new { contactId }, noteDto);
+        }
+        catch (ContactNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+    }
+
+    [HttpGet("{contactId:guid}/notes")]
+    [ProducesResponseType(typeof(IEnumerable<NoteDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetNotes([FromRoute] Guid contactId)
+    {
+        try
+        {
+            var person = await _personService.GetPersonAsync(contactId);
+            
+            var notes = person.Notes.Select(n => new NoteDto
+            {
+                Id = n.Id,
+                Content = n.Content,
+                CreatedAt = n.CreatedAt,
+                ContactId = n.ContactId
+            });
+            
+            return Ok(notes);
+        }
+        catch (ContactNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("{contactId:guid}/notes/{noteId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteNote(
+        [FromRoute] Guid contactId,
+        [FromRoute] Guid noteId)
+    {
+        try
+        {
+            await _personService.DeleteNoteAsync(contactId, noteId);
+            return NoContent();
+        }
+        catch (ContactNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
         }
         catch (Exception ex)
         {
