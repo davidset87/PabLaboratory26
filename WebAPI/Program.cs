@@ -1,7 +1,5 @@
-using AppCore.Interfaces;
 using AppCore.Modules;
-using AppCore.Repositories;
-using Infrastructure.Memory;
+using Infrastructure;
 using WebAPI.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,20 +13,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-// Register repositories
-builder.Services.AddSingleton<IPersonRepository, MemoryPersonRepository>();
-builder.Services.AddSingleton<ICompanyRepository, MemoryCompanyRepository>();
-builder.Services.AddSingleton<IOrganizationRepository, MemoryOrganizationRepository>();
-builder.Services.AddSingleton<IContactRepository, MemoryContactRepository>();
-builder.Services.AddSingleton<ICustomerService, MemoryCustomerService>();
+// Add EF module (or Memory module for testing)
+builder.Services.AddContactsEfModule(builder.Configuration);
+// builder.Services.AddContactsMemoryModule(); // Uncomment to use Memory repositories
 
-// Register Unit of Work
-builder.Services.AddSingleton<IContactUnitOfWork, MemoryContactUnitOfWork>();
-
-// Register Services
-builder.Services.AddSingleton<IPersonService, MemoryPersonService>();
-
-// Add Contacts module with validators and AutoMapper
+// Add Core module (validators and AutoMapper)
 builder.Services.AddContactsModule(builder.Configuration);
 
 var app = builder.Build();
@@ -41,7 +30,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseExceptionHandler(); // This must be before MapControllers
+app.UseExceptionHandler();
 app.UseAuthorization();
 app.MapControllers();
 

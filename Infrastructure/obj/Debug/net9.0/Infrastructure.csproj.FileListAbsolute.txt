@@ -29,3 +29,5 @@ C:\Users\david\RiderProjects\PabLaboratory026\Infrastructure\obj\Debug\net9.0\In
 C:\Users\david\RiderProjects\PabLaboratory026\Infrastructure\obj\Debug\net9.0\refint\Infrastructure.dll
 C:\Users\david\RiderProjects\PabLaboratory026\Infrastructure\obj\Debug\net9.0\Infrastructure.pdb
 C:\Users\david\RiderProjects\PabLaboratory026\Infrastructure\obj\Debug\net9.0\ref\Infrastructure.dll
+C:\Users\david\RiderProjects\PabLaboratory026\Infrastructure\bin\Debug\net9.0\Infrastructure.runtimeconfig.json
+C:\Users\david\RiderProjects\PabLaboratory026\Infrastructure\obj\Debug\net9.0\Infrastructure.genruntimeconfig.cache
