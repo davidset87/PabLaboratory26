@@ -2,6 +2,7 @@
 using AppCore.Models;
 using AppCore.ValueObjects;
 using Infrastructure.EntityFramework.Entities;
+using Infrastructure.Security;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ public class ContactsDbContext : IdentityDbContext<CrmUser, CrmRole, string>
     public DbSet<Person> People { get; set; }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Organization> Organizations { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }  // ← AJOUTEZ CETTE LIGNE
 
     public ContactsDbContext() { }
 
@@ -45,6 +47,14 @@ public class ContactsDbContext : IdentityDbContext<CrmUser, CrmRole, string>
             entity.Property(r => r.Name).HasMaxLength(20);
         });
 
+        // Configuration for RefreshToken
+        builder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(r => r.Id);
+            entity.HasIndex(r => r.Token).IsUnique();
+            entity.Property(r => r.UserId).IsRequired();
+        });
+
         // TPH inheritance mapping
         builder.Entity<Contact>()
             .HasDiscriminator<string>("ContactType")
@@ -58,7 +68,6 @@ public class ContactsDbContext : IdentityDbContext<CrmUser, CrmRole, string>
             entity.Property(p => p.Email).HasMaxLength(200);
             entity.Property(p => p.Phone).HasMaxLength(20);
             
-            // Configure Address as owned type
             entity.OwnsOne(c => c.Address, address =>
             {
                 address.Property(a => a.Id);
@@ -67,7 +76,6 @@ public class ContactsDbContext : IdentityDbContext<CrmUser, CrmRole, string>
                 address.Property(a => a.PostalCode).HasMaxLength(20);
                 address.Property(a => a.Type).HasConversion<string>();
                 
-                // Configure Country as owned type inside Address
                 address.OwnsOne(a => a.Country, country =>
                 {
                     country.Property(c => c.Name).HasColumnName("CountryName").HasMaxLength(100);

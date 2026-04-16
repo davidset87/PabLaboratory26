@@ -213,3 +213,11 @@ C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\ru\Microso
 C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
 C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll
+C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\david\RiderProjects\PabLaboratory026\WebAPI\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
