@@ -1,6 +1,6 @@
 @WebAPI_HostAddress = http://localhost:5284
 
-### 1. CREATE PERSON - RUN THIS FIRST
+### 1. CREATE PERSON
 POST {{WebAPI_HostAddress}}/api/contacts
 Content-Type: application/json
 
@@ -20,39 +20,21 @@ Content-Type: application/json
   }
 }
 
-### 2. COPY THE ID FROM THE RESPONSE ABOVE
-### THEN REPLACE "YOUR_PERSON_ID" BELOW WITH THAT ID
-
-### Get person by ID
-GET {{WebAPI_HostAddress}}/api/contacts/persons/89885896-45f9-4a09-b94f-aee640274a7d
-Accept: application/json
-
-### Add note to person
-POST {{WebAPI_HostAddress}}/api/contacts/9417b665-a5d2-4490-9c02-7ad6f807e31c/notes
+### 2. LOGIN - GET JWT TOKEN (Run this first to get token)
+POST {{WebAPI_HostAddress}}/api/auth/login
 Content-Type: application/json
 
 {
-  "content": "This is my first note"
+  "email": "jan.kowalski@crm.pl",
+  "password": "Manager@123!"
 }
 
-### Get all notes
-GET {{WebAPI_HostAddress}}/api/contacts/9417b665-a5d2-4490-9c02-7ad6f807e31c/notes
+### 3. GET ALL PERSONS (Protected - use token from step 2)
+GET {{WebAPI_HostAddress}}/api/contacts/persons?page=1&pageSize=10
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkY1QkFERTE0LTZDQzgtNDJBMi05QTQ0LTk4NDJEQTJEOTI4MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGNybS5wbCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IkFkYW0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiQWRtaW5pc3RyYXRvciIsImRlcGFydG1lbnQiOiJJVCIsImp0aSI6IjQ1NzY0M2Y0LTk3YmYtNDNhMC1hNGJjLWE5NDIzMDZmNWJmOSIsImlhdCI6IjE3NzY2NDA0NTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwibmJmIjoxNzc2NjQwNDU0LCJleHAiOjE3NzY2NDQwNTQsImlzcyI6IklkZWlzQ3JtQXBpIiwiYXVkIjoiQ3JtQ2xpZW50In0.nSkQgQaad20SgsTSKorqUqt8F410YAfDhST-4BncgPc
 
-### Update person (PUT)
-PUT {{WebAPI_HostAddress}}/api/contacts/9417b665-a5d2-4490-9c02-7ad6f807e31c
-Content-Type: application/json
-
-{
-  "firstName": "Janusz",
-  "lastName": "Updated",
-  "email": "janusz.updated@example.com",
-  "phone": "987654321",
-  "status": 0
-}
-
-### Delete note - COPY THE NOTE ID FROM GET NOTES RESPONSE
-DELETE {{WebAPI_HostAddress}}/api/contacts/89885896-45f9-4a09-b94f-aee640274a7d/notes/9c808150-bc71-429d-8cf2-85076e4fa03d
-
-### Delete person
-DELETE {{WebAPI_HostAddress}}/api/contacts/YOUR_PERSON_ID
+### 4. GET CURRENT USER INFO (Protected)
+GET {{WebAPI_HostAddress}}/api/auth/me
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkY1QkFERTE0LTZDQzgtNDJBMi05QTQ0LTk4NDJEQTJEOTI4MCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGNybS5wbCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2dpdmVubmFtZSI6IkFkYW0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9zdXJuYW1lIjoiQWRtaW5pc3RyYXRvciIsImRlcGFydG1lbnQiOiJJVCIsImp0aSI6IjQ1NzY0M2Y0LTk3YmYtNDNhMC1hNGJjLWE5NDIzMDZmNWJmOSIsImlhdCI6IjE3NzY2NDA0NTQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbmlzdHJhdG9yIiwibmJmIjoxNzc2NjQwNDU0LCJleHAiOjE3NzY2NDQwNTQsImlzcyI6IklkZWlzQ3JtQXBpIiwiYXVkIjoiQ3JtQ2xpZW50In0.nSkQgQaad20SgsTSKorqUqt8F410YAfDhST-4BncgPc

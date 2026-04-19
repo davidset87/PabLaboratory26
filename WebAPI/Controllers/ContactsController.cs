@@ -1,12 +1,15 @@
-﻿using AppCore.Dto;
+﻿using AppCore.Authorization;
+using AppCore.Dto;
 using AppCore.Exceptions;
 using AppCore.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
 [Route("api/contacts")]
+[Authorize]
 public class ContactsController : ControllerBase
 {
     private readonly IPersonService _personService;
@@ -17,12 +20,14 @@ public class ContactsController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Get()
     {
         return Ok("Contacts API is working");
     }
 
     [HttpGet("persons")]
+    [Authorize(Policy = "ReadOnlyAccess")]
     public async Task<IActionResult> GetAllPersons([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         try
@@ -37,6 +42,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpGet("persons/{id:guid}")]
+    [Authorize(Policy = "ReadOnlyAccess")]
     public async Task<IActionResult> GetPersonById(Guid id)
     {
         try
@@ -54,6 +60,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpGet("persons/search")]
+    [Authorize(Policy = "ReadOnlyAccess")]
     public async Task<IActionResult> SearchPersons([FromQuery] string query)
     {
         try
@@ -71,6 +78,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpGet("companies/{companyId}/employees")]
+    [Authorize(Policy = "SalesAccess")]
     public async Task<IActionResult> GetEmployeesByCompany(Guid companyId)
     {
         try
@@ -85,6 +93,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "SalesAccess")]
     public async Task<IActionResult> CreatePerson([FromBody] CreatePersonDto createDto)
     {
         try
@@ -102,6 +111,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Policy = "SalesManagerAccess")]
     public async Task<IActionResult> UpdatePerson(Guid id, [FromBody] UpdatePersonDto updateDto)
     {
         try
@@ -123,6 +133,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> DeletePerson(Guid id)
     {
         try
@@ -141,6 +152,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpPost("{contactId:guid}/notes")]
+    [Authorize(Policy = "SalesAccess")]
     [ProducesResponseType(typeof(NoteDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -173,6 +185,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpGet("{contactId:guid}/notes")]
+    [Authorize(Policy = "ReadOnlyAccess")]
     [ProducesResponseType(typeof(IEnumerable<NoteDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetNotes([FromRoute] Guid contactId)
@@ -198,6 +211,7 @@ public class ContactsController : ControllerBase
     }
 
     [HttpDelete("{contactId:guid}/notes/{noteId:guid}")]
+    [Authorize(Policy = "SalesManagerAccess")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
