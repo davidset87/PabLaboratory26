@@ -8,6 +8,7 @@ using Infrastructure.EntityFramework.Entities;
 using Infrastructure.EntityFramework.Repositories;
 using Infrastructure.EntityFramework.UnitOfWork;
 using Infrastructure.Security;
+using Infrastructure.Seeders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Infrastructure.Seeders; 
 
 namespace Infrastructure;
 
@@ -47,15 +47,18 @@ public static class ContactsInfrastructureModule
         services.AddScoped<IPersonRepository, EfPersonRepository>();
         services.AddScoped<ICompanyRepository, EfCompanyRepository>();
         services.AddScoped<IOrganizationRepository, EfOrganizationRepository>();
+        services.AddScoped<IRemovedContactRepository, EfRemovedContactRepository>();
 
         // Register Unit of Work
         services.AddScoped<IContactUnitOfWork, EfContactsUnitOfWork>();
 
         // Register Services
         services.AddScoped<IPersonService, PersonService>();
+        services.AddScoped<IPersonDeduplicationService, PersonDeduplicationService>();
 
         // Register Auth Service
         services.AddScoped<IAuthService, AuthService>();
+
         // Register Seeders
         services.AddScoped<IDataSeeder, IdentityDbSeeder>();
 
@@ -123,6 +126,10 @@ public static class ContactsInfrastructureModule
             // Policy: SalesDepartment (department claim)
             options.AddPolicy(CrmPolicies.SalesDepartment.Name(), policy =>
                 policy.RequireClaim("department", "Sales"));
+
+            // Policy: AdminOrSalesManager (for deduplication) 
+            options.AddPolicy("AdminOrSalesManager", policy =>
+                policy.RequireRole("Administrator", "SalesManager"));
 
             // Default policy - any authenticated user
             options.DefaultPolicy = new AuthorizationPolicyBuilder()

@@ -5,6 +5,8 @@ using Infrastructure.EntityFramework.Entities;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+// Alias pour résoudre l'ambiguïté
+using RemovedContactEntity = Infrastructure.EntityFramework.Entities.RemovedContact;
 
 namespace Infrastructure.EntityFramework.Context;
 
@@ -13,7 +15,8 @@ public class ContactsDbContext : IdentityDbContext<CrmUser, CrmRole, string>
     public DbSet<Person> People { get; set; }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Organization> Organizations { get; set; }
-    public DbSet<RefreshToken> RefreshTokens { get; set; }  // ← AJOUTEZ CETTE LIGNE
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
+    public DbSet<RemovedContactEntity> RemovedContacts { get; set; }  // Utilise l'alias
 
     public ContactsDbContext() { }
 
@@ -53,6 +56,23 @@ public class ContactsDbContext : IdentityDbContext<CrmUser, CrmRole, string>
             entity.HasKey(r => r.Id);
             entity.HasIndex(r => r.Token).IsUnique();
             entity.Property(r => r.UserId).IsRequired();
+        });
+
+        // Configuration for RemovedContact
+        builder.Entity<RemovedContactEntity>(entity =>
+        {
+            entity.HasKey(r => r.Id);
+            entity.Property(r => r.OriginalId).IsRequired().HasMaxLength(36);
+            entity.Property(r => r.RemovedByUserId).IsRequired().HasMaxLength(36);
+            entity.Property(r => r.RemovedByUserEmail).HasMaxLength(200);
+            entity.Property(r => r.DeduplicationReason).HasMaxLength(500);
+            entity.Property(r => r.DeduplicationStrategy).HasMaxLength(50);
+            entity.Property(r => r.FirstName).HasMaxLength(100);
+            entity.Property(r => r.LastName).HasMaxLength(100);
+            entity.Property(r => r.Email).HasMaxLength(200);
+            entity.Property(r => r.Phone).HasMaxLength(20);
+            entity.HasIndex(r => r.RemovedByUserId);
+            entity.HasIndex(r => r.RemovedAt);
         });
 
         // TPH inheritance mapping
@@ -103,72 +123,5 @@ public class ContactsDbContext : IdentityDbContext<CrmUser, CrmRole, string>
             .HasMany(o => o.Members)
             .WithOne(p => p.Organization)
             .HasForeignKey(p => p.OrganizationId);
-
-        // Seed data with STATIC values
-        var fixedDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        var addressId = Guid.Parse("77777777-7777-7777-7777-777777777777");
-        var person1Id = Guid.Parse("3d54091d-abc8-49ec-9590-93ad3ed5458f");
-        var person2Id = Guid.Parse("B4DCB17C-F875-43F8-9D66-36597895A466");
-        var companyId = Guid.Parse("516A34D7-CCFB-4F20-85F3-62BD0F3AF271");
-
-        // Seed Company
-        builder.Entity<Company>().HasData(
-            new Company
-            {
-                Id = companyId,
-                Name = "WSEI",
-                OrganizationType = AppCore.Enums.OrganizationType.Employee,
-                Email = "biuro@wsei.edu.pl",
-                Phone = "123567123",
-                Status = ContactStatus.Active,
-                CreatedAt = fixedDate,
-                UpdatedAt = fixedDate
-            }
-        );
-
-        // Seed Persons
-        builder.Entity<Person>().HasData(
-            new
-            {
-                Id = person1Id,
-                FirstName = "Adam",
-                LastName = "Nowak",
-                Gender = Gender.Male,
-                Status = ContactStatus.Active,
-                Email = "adam@wsei.edu.pl",
-                Phone = "123456789",
-                BirthDate = new DateTime(2001, 1, 11),
-                Position = "Programista",
-                CreatedAt = fixedDate,
-                UpdatedAt = fixedDate
-            },
-            new
-            {
-                Id = person2Id,
-                FirstName = "Ewa",
-                LastName = "Kowalska",
-                Gender = Gender.Female,
-                Status = ContactStatus.Blocked,
-                Email = "ewa@wsei.edu.pl",
-                Phone = "123123123",
-                BirthDate = new DateTime(2001, 1, 11),
-                Position = "Tester",
-                CreatedAt = fixedDate,
-                UpdatedAt = fixedDate
-            }
-        );
-
-        // Seed Address data
-        builder.Entity<Contact>().OwnsOne(c => c.Address).HasData(new
-        {
-            ContactId = person1Id,
-            Id = addressId,
-            Street = "ul. Św. Filipa 17",
-            City = "Kraków",
-            PostalCode = "25-009",
-            Type = AddressType.Home,
-            CountryName = "Poland",
-            CountryCode = "PL"
-        });
     }
 }

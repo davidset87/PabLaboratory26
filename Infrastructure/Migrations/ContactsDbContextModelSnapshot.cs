@@ -246,6 +246,76 @@ namespace Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Infrastructure.EntityFramework.Entities.RemovedContact", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeduplicationReason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DeduplicationStrategy")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OriginalId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("RemovedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RemovedByUserEmail")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RemovedByUserId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RemovedAt");
+
+                    b.HasIndex("RemovedByUserId");
+
+                    b.ToTable("RemovedContacts");
+                });
+
             modelBuilder.Entity("Infrastructure.Security.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -434,36 +504,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("OrganizationId");
 
                     b.HasDiscriminator().HasValue("Person");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("3d54091d-abc8-49ec-9590-93ad3ed5458f"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "adam@wsei.edu.pl",
-                            Phone = "123456789",
-                            Status = "Active",
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            BirthDate = new DateTime(2001, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Adam",
-                            Gender = "Male",
-                            LastName = "Nowak",
-                            Position = "Programista"
-                        },
-                        new
-                        {
-                            Id = new Guid("b4dcb17c-f875-43f8-9d66-36597895a466"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "ewa@wsei.edu.pl",
-                            Phone = "123123123",
-                            Status = "Blocked",
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            BirthDate = new DateTime(2001, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            FirstName = "Ewa",
-                            Gender = "Female",
-                            LastName = "Kowalska",
-                            Position = "Tester"
-                        });
                 });
 
             modelBuilder.Entity("AppCore.Models.Company", b =>
@@ -483,19 +523,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasDiscriminator().HasValue("Company");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("516a34d7-ccfb-4f20-85f3-62bd0f3af271"),
-                            CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "biuro@wsei.edu.pl",
-                            Phone = "123567123",
-                            Status = "Active",
-                            UpdatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "WSEI",
-                            OrganizationType = 0
-                        });
                 });
 
             modelBuilder.Entity("AppCore.Models.Contact", b =>
@@ -561,17 +588,6 @@ namespace Infrastructure.Migrations
 
                             b1.Navigation("Country")
                                 .IsRequired();
-
-                            b1.HasData(
-                                new
-                                {
-                                    ContactId = new Guid("3d54091d-abc8-49ec-9590-93ad3ed5458f"),
-                                    City = "Kraków",
-                                    Id = new Guid("77777777-7777-7777-7777-777777777777"),
-                                    PostalCode = "25-009",
-                                    Street = "ul. Św. Filipa 17",
-                                    Type = "Home"
-                                });
                         });
 
                     b.Navigation("Address");

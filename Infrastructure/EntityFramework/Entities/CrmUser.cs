@@ -13,6 +13,10 @@ public class CrmUser : IdentityUser, ISystemUser
     public DateTime CreatedAt { get; set; }
     public DateTime? LastLoginAt { get; private set; }
     public DateTime? DeactivatedAt { get; private set; }
+    
+    // Fix nullable warning
+    public override string? Email { get => base.Email; set => base.Email = value; }
+    string ISystemUser.Email => Email ?? string.Empty;
 
     public void Activate()
     {
